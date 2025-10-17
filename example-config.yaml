@@ -1,0 +1,9 @@
+host: localhost
+port: 8000
+script-dir: scripts
+
+pubs:
+  example:
+    path: example
+    script: example.sh
+    token: example-token
