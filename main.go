@@ -3,53 +3,53 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"regexp"
 	"time"
 
 	"publy/middleware"
 	"publy/util/config"
 	"publy/util/logging"
+	"publy/util/passwords"
 
 	"github.com/gin-gonic/gin"
 )
 
-func authorizePub(pub string, token string) bool {
-	config, err := config.Get()
-	if err != nil {
-		logging.LogError(err, "Failed to load config.")
-		return false
-	}
-
-	pubConfig, exists := config.Pubs[pub]
-	if !exists {
-		logging.LogError(err, fmt.Sprintf("Pub '%s' does not exist in config.", pub))
-		return false
-	}
-
-	if pubConfig.Token != token {
-		return false
-	}
-
-	return true
-}
-
-func publish(ctx *gin.Context) {
-	pub := ctx.Query("pub")
-	println("Publishing to pub:", pub)
-	authorized := authorizePub(pub, ctx.GetString("x-token"))
-	println("Authorized:", authorized)
-
-	if !authorized {
-		logging.LogPublish(
+func generateHash(ctx *gin.Context) {
+	// Allow only local requests
+	re := regexp.MustCompile(`^(10|127|192\.168|172\.(1[6-9]|2[0-9]|3[0-1]))\.|^localhost`)
+	if !re.MatchString(ctx.Request.Host) {
+		logging.LogReq(
+			ctx.Request.Host,
 			ctx.ClientIP(),
 			ctx.Request.Method,
 			ctx.FullPath(),
 			ctx.Request.UserAgent(),
-			false,
-			pub,
+			403,
 		)
-		ctx.JSON(401, gin.H{"error": "unauthorized"})
+		ctx.JSON(403, gin.H{"error": "forbidden"})
 		return
 	}
+
+	var req struct {
+		String string `json:"string" binding:"required"`
+	}
+
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": "invalid request"})
+		return
+	}
+
+	hash, err := passwords.GenerateHash(req.String)
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": "failed to generate hash"})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"hash": hash})
+}
+
+func publish(ctx *gin.Context) {
+	pub := ctx.Query("pub")
 
 	logging.LogPublish(
 		ctx.ClientIP(),
@@ -95,7 +95,8 @@ func main() {
 			ctx.JSON(200, gin.H{"status": "ok"})
 		})
 
-		v1.GET("/publish", middleware.AuthMiddleware(), publish)
+		v1.GET("/publish", middleware.AuthMiddleware(*config), publish)
+		v1.POST("/generate-hash", generateHash)
 
 	}
 

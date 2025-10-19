@@ -14,9 +14,8 @@ type Config struct {
 	Port      int    `mapstructure:"port"`
 	ScriptDir string `mapstructure:"script-dir"`
 	Pubs      map[string]struct {
-		Path   string `mapstructure:"path"`
-		Script string `mapstructure:"script"`
-		Token  string `mapstructure:"token"`
+		Script    string `mapstructure:"script"`
+		TokenHash string `mapstructure:"token-hash"`
 	} `mapstructure:"pubs"`
 }
 

@@ -4,6 +4,5 @@ script-dir: scripts
 
 pubs:
   example:
-    path: example
     script: example.sh
-    token: example-token
+    token-hash: $2a$14$FucMWBg5wjVCcsz6cHmj2e9NpiqmkYbTEIjGa.U6.SH4CHj36St7q # example-token

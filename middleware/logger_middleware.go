@@ -10,6 +10,7 @@ func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 		logging.LogReq(
+			c.Request.Host,
 			c.ClientIP(),
 			c.Request.Method,
 			c.FullPath(),
