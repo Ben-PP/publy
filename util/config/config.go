@@ -27,7 +27,7 @@ func loadConfig() (config *Config, err error) {
 		viper.AddConfigPath(".")
 	} else {
 		viper.SetConfigName("config")
-		viper.AddConfigPath("$HOME/.config/publy")
+		viper.AddConfigPath("/etc/publy")
 	}
 	viper.SetConfigType("yaml")
 
