@@ -2,6 +2,7 @@ package logging
 
 import "log/slog"
 
+// LogError logs an error that happened during request handling.
 func LogError(err error, detail string) {
 	log(
 		slog.LevelError,

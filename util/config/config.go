@@ -21,6 +21,7 @@ type Config struct {
 
 var globalConfig *Config
 
+// Loads configuration from file and environment variables.
 func loadConfig() (config *Config, err error) {
 	if os.Getenv("GO_ENV") == "dev" {
 		viper.SetConfigName("dev-config")
@@ -44,6 +45,7 @@ func loadConfig() (config *Config, err error) {
 	return
 }
 
+// Returns the global configuration, loading it if necessary.
 func Get() (config *Config, err error) {
 	if globalConfig == nil {
 		globalConfig, err = loadConfig()

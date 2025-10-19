@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Logger is a Gin middleware that logs each request using the logging package.
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()

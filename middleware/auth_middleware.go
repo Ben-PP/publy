@@ -12,7 +12,7 @@ import (
 )
 
 // Compares the provided token with the stored hash for the given pub.
-// If the token is valid, the request proceeds; otherwise, it is aborted with a 401 status.
+// If the token is valid, the request proceeds, otherwise, it is aborted with a 401 status.
 func AuthMiddleware(config config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		bearerToken := c.Request.Header.Get("Authorization")
