@@ -10,6 +10,7 @@ import (
 	"github.com/DeRuina/timberjack"
 )
 
+// GetLogger initializes and returns a configured slog.Logger instance.
 func GetLogger() *slog.Logger {
 	logDir := "/var/log/publy"
 	if os.Getenv("GO_ENV") == "dev" {
@@ -52,6 +53,7 @@ func GetLogger() *slog.Logger {
 	return appLogger
 }
 
+// log is a helper function to log messages with a specific sourcetype.
 func log(level slog.Leveler, message string, sourcetype string, args ...slog.Attr) {
 	slog.LogAttrs(
 		context.Background(),

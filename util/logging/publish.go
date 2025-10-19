@@ -2,6 +2,7 @@ package logging
 
 import "log/slog"
 
+// LogPublish logs a publish event
 func LogPublish(
 	src_ip string,
 	method string, path string,

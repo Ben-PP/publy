@@ -15,6 +15,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// generateHash handles the /generate-hash endpoint. It generates a hash for a given string.
+// Access to this endpoint is restricted to local requests only.
 func generateHash(ctx *gin.Context) {
 	// Allow only local requests
 	re := regexp.MustCompile(`^(10|127|192\.168|172\.(1[6-9]|2[0-9]|3[0-1]))\.|^localhost`)
@@ -49,6 +51,7 @@ func generateHash(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"hash": hash})
 }
 
+// publish handles the /publish endpoint. It triggers the publish script for the specified pub.
 func publish(ctx *gin.Context, config config.Config) {
 	pub := ctx.Query("pub")
 
