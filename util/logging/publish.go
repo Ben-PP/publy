@@ -8,6 +8,7 @@ func LogPublish(
 	userAgent string,
 	success bool,
 	pub string,
+	output string,
 ) {
 	log(
 		slog.LevelInfo,
@@ -22,6 +23,7 @@ func LogPublish(
 			slog.String("user_agent", userAgent),
 			slog.String("pub", pub),
 			slog.Bool("success", success),
+			slog.String("output", output),
 		),
 	)
 }
