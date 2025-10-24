@@ -103,6 +103,9 @@ func main() {
 		return
 	}
 
+	if os.Getenv("GO_ENV") != "dev" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.Default()
 
 	router.Use(middleware.Logger())
@@ -140,9 +143,6 @@ func main() {
 	}
 	slog.Info("Using proxies: " + fmt.Sprint(config.Proxies))
 
-	if os.Getenv("GO_ENV") != "dev" {
-		gin.SetMode(gin.ReleaseMode)
-	}
 	if config.SSL.Enabled {
 		router.RunTLS(
 			addr,
