@@ -24,6 +24,12 @@ create the `config.yaml` from scratch.
 host: localhost # Address/domain which the server listens. Use 0.0.0.0 for all.
 port: 8000 # Port on which the server listens.
 script-dir: scripts # Directory where the scripts to be executed are stored.
+proxies: # List of addresses or CIDR notations for trusted proxies.
+  - localhost
+ssl:
+  enabled: true # Use SSL
+  certificate: /etc/ssl/certs/server.crt # Server certificate file
+  key: /etc/ssl/private/server.key # Certificate key file
 
 pubs: # Any number of pubs, which define what is executed when API is called.
   example-service: # Name of the pub. This is given as query parameter when calling the API.

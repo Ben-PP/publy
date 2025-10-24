@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"os/exec"
 	"regexp"
 	"time"
@@ -56,7 +57,7 @@ func publish(ctx *gin.Context, config config.Config) {
 	pub := ctx.Query("pub")
 
 	// Pub must exist (checked in AuthMiddleware)
-	pubConfig, _ := config.Pubs[pub]
+	pubConfig := config.Pubs[pub]
 	if config.ScriptDir[len(config.ScriptDir)-1] == '/' {
 		config.ScriptDir = config.ScriptDir[:len(config.ScriptDir)-1]
 	}
@@ -131,6 +132,24 @@ func main() {
 
 	}
 
-	slog.Info("Starting server.")
-	router.Run(fmt.Sprintf("%v:%v", config.Host, config.Port))
+	addr := fmt.Sprintf("%v:%v", config.Host, config.Port)
+	slog.Info("Starting server at " + addr)
+
+	if len(config.Proxies) > 0 {
+		router.SetTrustedProxies(config.Proxies)
+	}
+	slog.Info("Using proxies: " + fmt.Sprint(config.Proxies))
+
+	if os.Getenv("GO_ENV") != "dev" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	if config.SSL.Enabled {
+		router.RunTLS(
+			addr,
+			config.SSL.Certificate,
+			config.SSL.Key,
+		)
+	} else {
+		router.Run(addr)
+	}
 }
