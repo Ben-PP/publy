@@ -1,6 +1,11 @@
 host: localhost
 port: 8000
 script-dir: scripts
+proxies:
+ssl:
+  enabled: true
+  certificate: server.crt
+  key: server.key
 
 pubs:
   example:

@@ -10,10 +10,16 @@ import (
 var ErrConfigLoadFailed = errors.New("failed to load config")
 
 type Config struct {
-	Host      string `mapstructure:"host"`
-	Port      int    `mapstructure:"port"`
-	ScriptDir string `mapstructure:"script-dir"`
-	Pubs      map[string]struct {
+	Host      string   `mapstructure:"host"`
+	Port      int      `mapstructure:"port"`
+	ScriptDir string   `mapstructure:"script-dir"`
+	Proxies   []string `mapstructure:"proxies"`
+	SSL       struct {
+		Enabled     bool   `mapstructure:"enabled"`
+		Certificate string `mapstructure:"certificate"`
+		Key         string `mapstructure:"key"`
+	} `mapstructure:"ssl"`
+	Pubs map[string]struct {
 		Script    string `mapstructure:"script"`
 		TokenHash string `mapstructure:"token-hash"`
 	} `mapstructure:"pubs"`
